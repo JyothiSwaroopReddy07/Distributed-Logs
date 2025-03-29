@@ -10,13 +10,6 @@ INDEX_NAME = "logs-index"
 def ensure_index():
     if not es.indices.exists(index=INDEX_NAME):
         es.indices.create(index=INDEX_NAME, body={
-            "settings": {
-                "index": {
-                    "lifecycle": {
-                        "name": "log-cleanup-policy"
-                    }
-                }
-            },
             "mappings": {
                 "properties": {
                     "service_name": {"type": "keyword"},
@@ -58,7 +51,7 @@ def search_logs(service_name, start, end):
     ]
 
 def delete_old_logs(days=60):
-    cutoff = datetime.utcnow() - timedelta(days=days)
+    cutoff = datetime.utcnow() - timedelta(days=60)
     query = {
         "query": {
             "range": {

@@ -1,10 +1,11 @@
-# 🧠 Distributed Logs System with FastAPI + Elasticsearch + Kibana
+# 🧠 Distributed Logs System with FastAPI + Kafka + Elasticsearch + Kibana
 
-A simple yet powerful logging pipeline using **FastAPI**, **Elasticsearch**, and **Kibana**. This project allows you to:
+A robust and scalable logging pipeline using **FastAPI**, **Kafka**, **Elasticsearch**, and **Kibana**. This project allows you to:
 
 - Ingest logs via a POST API
-- Store them in Elasticsearch
-- Visualize and explore them in Kibana
+- Send logs to Kafka for decoupled processing
+- Store logs in Elasticsearch for querying
+- Visualize and explore logs in Kibana
 - Simulate logs and test APIs using synthetic generators
 
 ---
@@ -12,12 +13,25 @@ A simple yet powerful logging pipeline using **FastAPI**, **Elasticsearch**, and
 ## 📦 Tech Stack
 
 - **FastAPI** – Web framework
+- **Kafka** – Scalable log queue and message broker
 - **Elasticsearch** – Log storage and search
 - **Kibana** – Log dashboard
 - **Python scripts** – For generating and fetching logs
 
 ---
 
+## 🤖 Why Kafka + ELK?
+
+Kafka acts as a buffer between the **API ingestion layer** and **Elasticsearch**, ensuring:
+
+- **High throughput log ingestion** without overloading Elasticsearch
+- **Fault tolerance**: logs won't be lost if Elasticsearch is down temporarily
+- **Decoupling** of log ingestion and storage layers
+- **Scalability**: multiple consumers can process the logs in parallel
+
+Together, Kafka + ELK ensures your system remains **resilient, performant, and horizontally scalable**.
+
+---
 
 ## 🚀 Getting Started
 
@@ -30,14 +44,33 @@ cd distributed-logs
 
 ---
 
-## ⚙️ Setting Up Elasticsearch & Kibana (Docker)
+## ⚙️ Setting Up Kafka, Elasticsearch & Kibana (Docker)
 
-### 📁 Create `docker-compose.yml`
+### 📁 `docker-compose.yml`
 
 ```yaml
 version: '3.8'
 
 services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+    ports:
+      - "2181:2181"
+
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    ports:
+      - "9092:9092"
+
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.17.0
     container_name: elasticsearch
@@ -56,10 +89,10 @@ services:
       - elasticsearch
 ```
 
-### 🏁 Start Elasticsearch & Kibana
+### 🏁 Start All Services
 
 ```bash
-docker-compose up
+docker-compose up -d
 ```
 
 ---
@@ -85,6 +118,12 @@ pip install -r requirements.txt
 uvicorn app.main:app --reload --port 8001
 ```
 
+### 4. Start the Kafka consumer (in a new terminal):
+
+```bash
+python -m app.kafka_consumer
+```
+
 The API will be available at:  
 📍 http://localhost:8001
 
@@ -105,12 +144,14 @@ The API will be available at:
 
 ```
 app/
-🔽️ main.py          # FastAPI app with routes
-🔽️ models.py        # LogEntry schema
-🔽️ es_client.py     # Elasticsearch query/insert functions
-🔽️ cleaner.py       # Background task (optional)
-log_generator.py     # Sends synthetic logs
-log_fetcher.py       # Fetches logs with random queries
+🔽️ main.py            # FastAPI app with routes
+🔽️ models.py          # LogEntry schema
+🔽️ es_client.py       # Elasticsearch query/insert functions
+🔽️ kafka_producer.py  # Kafka producer logic
+🔽️ kafka_consumer.py  # Kafka consumer that pushes logs to ES
+🔽️ cleaner.py         # Background log cleaner
+log_generator.py       # Sends synthetic logs
+log_fetcher.py         # Fetches logs with random queries
 requirements.txt
 docker-compose.yml
 README.md
@@ -130,9 +171,6 @@ Generates and POSTs logs to the `/logs` endpoint.
 python log_generator.py
 ```
 
-- Sends 100 logs by default
-- Each log includes random timestamp, level, message, and source
-
 ---
 
 ## 🧰 Log Fetcher (Query Tester)
@@ -147,15 +185,11 @@ Sends random GET requests to fetch logs from the `/logs` endpoint.
 python log_fetcher.py
 ```
 
-- Makes 20 random queries across services and date ranges
-- Helps test retrieval and API accuracy
-
 ---
 
-## 🗜️ Cleaner Task (Optional)
+## 🗜️ Cleaner Task
 
-- You can write a background task (`cleaner.py`) to remove old logs or do rolling archival.
-- Hooked into FastAPI `startup()`.
+A background task that deletes logs older than 60 days, automatically launched during FastAPI startup.
 
 ---
 
@@ -200,7 +234,7 @@ GET /logs?service=backend&start=2025-03-20T00:00:00&end=2025-03-28T00:00:00
 
 ---
 
-## Resultant ScreenShots
+## 📸 Resultant Screenshots
 
 ![alt text](<public/Screenshot 2025-03-28 at 5.43.44 PM.png>) 
 ![alt text](<public/Screenshot 2025-03-28 at 5.44.24 PM.png>) 

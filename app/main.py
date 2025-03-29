@@ -9,6 +9,8 @@ from app.models import LogEntry
 from app.es_client import insert_log, search_logs, ensure_index
 from app.cleaner import cleaner_task
 
+from app.kafka_producer import send_log_to_kafka
+
 INDEX_NAME = "logs"
 es = Elasticsearch("http://localhost:9200")
 app = FastAPI()
@@ -28,10 +30,8 @@ async def startup():
 
 @app.post("/logs")
 def create_log(entry: LogEntry):
-    print(entry)
-    doc = entry.dict()
-    es.index(index=INDEX_NAME, document=doc)
-    return {"status": "log stored"}
+    send_log_to_kafka(entry.dict())
+    return {"status": "log sent to Kafka"}
 
 @app.get("/logs")
 def search_logs(service, start, end):
