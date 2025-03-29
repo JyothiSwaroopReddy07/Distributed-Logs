@@ -10,7 +10,7 @@ SOURCES = ["frontend", "backend", "auth-service", "db", "cron-job", "api-gateway
 def random_date_range():
     now = datetime.utcnow()
     start_offset = random.randint(1, 29)  # between 1 and 29 days ago
-    duration_minutes = random.randint(1440, 21600)  # window of 10 min to 3 hours
+    duration_minutes = random.randint(1440, 21600)  # window of 1 day to 15 days
 
     start = now - timedelta(days=start_offset, minutes=random.randint(0, 1440))
     end = start + timedelta(minutes=duration_minutes)
