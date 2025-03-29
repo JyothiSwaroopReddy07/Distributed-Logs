@@ -242,3 +242,9 @@ GET /logs?service=backend&start=2025-03-20T00:00:00&end=2025-03-28T00:00:00
 ![alt text](<public/Screenshot 2025-03-28 at 5.45.29 PM.png>) 
 ![alt text](<public/Screenshot 2025-03-28 at 5.45.53 PM.png>)
 ![alt text](<public/Screenshot 2025-03-28 at 5.52.43 PM.png>)
+
+### Kafka Producer
+![alt text](<public/Screenshot 2025-03-29 at 9.42.11 AM.png>)
+
+### Kafka Consumer
+![alt text](<public/Screenshot 2025-03-29 at 9.42.21 AM.png>)

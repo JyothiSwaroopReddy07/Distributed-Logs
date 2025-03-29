@@ -14,4 +14,5 @@ producer = KafkaProducer(
 )
 
 def send_log_to_kafka(log_data):
+    print(f"🔼 Sending log to Kafka: {log_data}")
     producer.send("logs-topic", log_data)
