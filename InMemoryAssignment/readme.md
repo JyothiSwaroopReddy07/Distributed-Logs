@@ -84,7 +84,7 @@ This approach aligns perfectly with the assignment's emphasis on:
 
 
 
-### 🧹 TTL (Time-To-Live) Cleanup
+### TTL (Time-To-Live) Cleanup
 - Background task deletes logs older than **1 hour**
 - Keeps memory usage lean
 
@@ -117,7 +117,7 @@ uvicorn app.main:app --reload --port 8083
 ```
 
 API will be available at:  
-🔗 `http://localhost:8083`
+  `http://localhost:8083`
 
 ---
 
