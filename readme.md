@@ -1,4 +1,9 @@
-# 🧠 Distributed Logs System with FastAPI + Kafka + Elasticsearch + Kibana + Redis
+
+> 📌 **Note**: The original in-memory version of this assignment, as per spec, is available [here](./InMemoryAssignment).  
+> I wanted to showcase my **production-level skills** in building **scalable, distributed log processing systems**, so I’ve also implemented this **extended version**.
+
+
+# Distributed Logs System with FastAPI + Kafka + Elasticsearch + Kibana + Redis
 
 A robust, scalable, and efficient logging system using **FastAPI**, **Kafka**, **Elasticsearch**, **Kibana**, and **Redis**. It enables:
 
@@ -11,13 +16,13 @@ A robust, scalable, and efficient logging system using **FastAPI**, **Kafka**, *
 
 ---
 
-## 🎞️ Architecture Overview
+## Architecture Overview
 
 ![Architecture](public/Architecture.png)
 
 ---
 
-## 📅 Tech Stack
+## Tech Stack
 
 - **FastAPI**: REST API
 - **Kafka**: Queue for log delivery
@@ -28,29 +33,29 @@ A robust, scalable, and efficient logging system using **FastAPI**, **Kafka**, *
 
 ---
 
-## 🪀 Why This Stack?
+## Why This Stack?
 
-### ✅ Scalable
+### Scalable
 - Kafka handles massive ingestion without overloading Elasticsearch.
 - Redis minimizes load on Elasticsearch by serving frequent queries.
 - Threading optimizes API responsiveness under heavy concurrent reads.
 
-### ⚡ Fast
+### Fast
 - Redis gives sub-millisecond access to frequent results.
 - Multithreading handles concurrent GET requests efficiently.
 
-### 🛡️ Reliable
+### Reliable
 - Kafka decouples ingestion and storage: logs are never lost.
 - Cleaner task maintains data integrity by removing old logs.
 
-### 📊 Efficient
+### Efficient
 - Async log ingestion with Kafka
 - Cached GET queries
 - Non-blocking Elasticsearch access via threadpool
 
 ---
 
-## 🚧 Redis Caching
+## Redis Caching
 
 - Every GET `/logs` request is cached using a hash key of the query params.
 - If key is in Redis: return instantly
@@ -69,7 +74,7 @@ else:
 
 ---
 
-## 🪜 Multithreading for Efficiency
+## Multithreading for Efficiency
 
 GET requests use:
 ```python
@@ -79,39 +84,39 @@ This offloads CPU-intensive Elasticsearch work to a threadpool, keeping the even
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
-### 📁 Clone
+### Clone
 ```bash
-git clone https://github.com/your-username/distributed-logs.git
+git clone https://github.com/JyothiSwaroopReddy07/distributed-logs.git
 cd distributed-logs
 ```
 
-### 🚧 Docker Compose
+### Docker Compose
 ```bash
 docker-compose up -d
 ```
 
-### 💡 Install Python Dependencies
+### Install Python Dependencies
 ```bash
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### 🚀 Start FastAPI
+### Start FastAPI
 ```bash
 uvicorn app.main:app --reload --port 8001
 ```
 
-### 🚀 Start Kafka Consumer
+### Start Kafka Consumer
 ```bash
 python -m app.kafka_consumer
 ```
 
 ---
 
-## 📊 Kibana Dashboard Setup
+## Kibana Dashboard Setup
 
 1. Go to: [http://localhost:5601](http://localhost:5601)
 2. Discover tab → Create index pattern: `logs*`
@@ -119,7 +124,7 @@ python -m app.kafka_consumer
 
 ---
 
-## 📒 Project Structure
+## Project Structure
 ```
 app/
 🔽️ main.py            # FastAPI API with cache/threading
@@ -136,7 +141,7 @@ docker-compose.yml
 
 ---
 
-## 🪧 Requirements
+## Requirements
 
 ```
 fastapi==0.110.0
@@ -153,21 +158,21 @@ redis==5.0.1
 
 ---
 
-## 📲 Synthetic Log Generator
+## Synthetic Log Generator
 ```bash
 python log_generator.py
 ```
 
-## 🎯 Log Fetcher
+## Log Fetcher
 ```bash
 python log_fetcher.py
 ```
 
 ---
 
-## 📊 Sample API Endpoints
+## Sample API Endpoints
 
-### ➕ POST `/logs`
+### POST `/logs`
 ```json
 {
   "timestamp": "2025-03-28T10:00:00",
@@ -177,14 +182,14 @@ python log_fetcher.py
 }
 ```
 
-### 🔍 GET `/logs`
+### GET `/logs`
 ```http
 /logs?service=backend&start=2025-03-20T00:00:00&end=2025-03-28T00:00:00
 ```
 
 ---
 
-## 📸 Screenshots
+## Screenshots
 
 ![Kibana Discover](<public/Screenshot 2025-03-28 at 5.43.44 PM.png>)
 ![Filters & Timeline](<public/Screenshot 2025-03-28 at 5.44.24 PM.png>)
@@ -197,19 +202,19 @@ python log_fetcher.py
 
 ---
 
-## 🚩 Summary
+## Summary
 
 This project demonstrates a **production-grade** logging pipeline featuring:
 
-- 🪜 **Multithreaded querying**
-- 🪫 **Redis caching**
-- ⚡ **Kafka-based ingestion**
-- 📊 **Elastic-powered search**
-- 🔍 **Kibana visual analysis**
+- **Multithreaded querying**
+- **Redis caching**
+- **Kafka-based ingestion**
+- **Elastic-powered search**
+- **Kibana visual analysis**
 
 Perfect for monitoring, debugging, and log analytics at scale.
 
 ---
 
-Feel free to fork, extend, or scale it up further ✨
+Feel free to fork, extend, or scale it up further
 
