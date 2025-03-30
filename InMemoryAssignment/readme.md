@@ -183,7 +183,7 @@ async def cleaner():
 ## File Structure
 
 ```
-inmemory_logs/
+InMemoryAssignment/
 ├── app/
 │   ├── __init__.py
 │   ├── main.py          # FastAPI app setup
