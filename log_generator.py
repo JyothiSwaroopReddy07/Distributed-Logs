@@ -33,7 +33,7 @@ def generate_log():
     }
     return log
 
-def send_logs(count=1000, delay=0.1):
+def send_logs(count=100, delay=0.1):
     for _ in range(count):
         log = generate_log()
         response = requests.post(ENDPOINT, json=log)
@@ -41,4 +41,4 @@ def send_logs(count=1000, delay=0.1):
         time.sleep(delay)
 
 if __name__ == "__main__":
-    send_logs(count=1000, delay=0.05)  # Sends 100 logs with 50ms delay
+    send_logs(count=100, delay=0.05)  # Sends 100 logs with 50ms delay
