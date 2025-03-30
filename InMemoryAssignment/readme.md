@@ -13,9 +13,9 @@ A minimal, efficient, and concurrency-safe **log aggregation service** designed 
 --- 
 
 
-## 🚀 Features
+## Features
 
-### 🔐 Thread-Safe Log Insertion
+### Thread-Safe Log Insertion
 - Uses `asyncio.Lock` to protect shared log list from race conditions
 - Concurrent requests can safely add/query logs
 
@@ -23,7 +23,7 @@ Here’s the section formatted in proper `README.md` style:
 
 ---
 
-### 🧮 Logs Sorted by Timestamp — Efficient and Always Ordered
+### Logs Sorted by Timestamp — Efficient and Always Ordered
 
 This in-memory logging system **automatically maintains logs sorted by `timestamp`**, using Python’s built-in `bisect` module.
 
@@ -38,7 +38,7 @@ When logs are sorted on insert:
 
 ---
 
-#### 🔧 How It Works
+#### How It Works
 
 We use Python's `bisect` module to insert each log into the list at the correct position:
 
@@ -110,7 +110,7 @@ pip install -r requirements.txt
 
 ---
 
-## ▶Run the Server
+## Run the Server
 
 ```bash
 uvicorn app.main:app --reload --port 8083
@@ -121,9 +121,9 @@ API will be available at:
 
 ---
 
-## 📘 API Endpoints
+## API Endpoints
 
-### ➕ `POST /logs`
+### `POST /logs`
 
 Add a new log.
 
@@ -139,7 +139,7 @@ Add a new log.
 
 ---
 
-### 🔍 `GET /logs?start=...&end=...`
+### `GET /logs?start=...&end=...`
 
 Fetch logs within a time range.
 
@@ -150,7 +150,7 @@ GET /logs?start=2025-04-01T10:00:00Z&end=2025-04-01T13:00:00Z
 
 ---
 
-## 🧪 How It Works
+## How It Works
 
 ### 1. **Logs are stored in a list** in memory
 ```python
@@ -180,18 +180,26 @@ async def cleaner():
 ---
 
 
-## 📂 File Structure
+## File Structure
 
 ```
-app/
-  └── main.py          # Core FastAPI app with insert/query/cleanup logic
-requirements.txt       # All required Python packages
-README.md              # This file
+inmemory_logs/
+├── app/
+│   ├── __init__.py
+│   ├── main.py          # FastAPI app setup
+│   ├── routes.py        # API route definitions
+│   ├── models.py        # LogEntry schema
+│   ├── storage.py       # In-memory list logic
+│   ├── utils.py         # (Optional) utility functions
+│   └── cleaner.py       # Background task
+├── requirements.txt
+├── README.md
+
 ```
 
 ---
 
-## 🔧 requirements.txt
+## requirements.txt
 
 ```txt
 fastapi==0.110.0
@@ -200,7 +208,7 @@ uvicorn==0.29.0
 
 ---
 
-## 💬 Feedback
+## Feedback
 
 This project was built to demonstrate **clean code**, **async programming**, and **thread-safe design** under in-memory constraints.
 
